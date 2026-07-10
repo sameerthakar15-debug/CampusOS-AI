@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import Login from "./pages/Login";
-
-function App() {
-  return <Login />;
-=======
 import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -33,7 +27,6 @@ function App() {
       {page === "dashboard" && <Dashboard />}
     </>
   );
->>>>>>> ddb2c2e (Redesign campus UI flow with shared light-blue theme)
 }
 
 export default App;

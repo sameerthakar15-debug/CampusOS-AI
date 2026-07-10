@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import Sidebar from "../components/dashboard/Sidebar";
-import Navbar from "../components/dashboard/Navbar";
-
-function Dashboard() {
-  return (
-    <div className="min-h-screen flex bg-gradient-to-br from-blue-50 via-indigo-100 to-cyan-50">
-
-      <Sidebar />
-
-      <main className="flex-1 p-8">
-
-        <Navbar />
-
-      </main>
-
-=======
 import { ArrowRight, Bot, CalendarCheck, Sparkles } from "lucide-react";
 import Card from "../components/common/Card";
 import Sidebar from "../components/dashboard/Sidebar";
@@ -109,7 +92,6 @@ function Dashboard() {
           </div>
         </main>
       </div>
->>>>>>> ddb2c2e (Redesign campus UI flow with shared light-blue theme)
     </div>
   );
 }
