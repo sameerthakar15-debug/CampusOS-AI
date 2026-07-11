@@ -1,41 +1,67 @@
-import { Activity, BookOpen, Trophy } from "lucide-react";
+import {
+  Activity,
+  BookOpen,
+  GraduationCap,
+  Clock,
+} from "lucide-react";
 
-const stats = [
-  {
-    label: "Study streak",
-    value: "12 days",
-    icon: Activity,
-  },
-  {
-    label: "Assignments",
-    value: "4 pending",
-    icon: BookOpen,
-  },
-  {
-    label: "Achievements",
-    value: "3 unlocked",
-    icon: Trophy,
-  },
-];
+function QuickStats({ student }) {
+  const stats = [
+    {
+      label: "Attendance",
+      value: `${student?.attendance || 92}%`,
+      icon: Activity,
+      color: "text-green-600",
+      bg: "bg-green-100",
+    },
+    {
+      label: "Pending Assignments",
+      value: student?.assignments || "4",
+      icon: BookOpen,
+      color: "text-red-600",
+      bg: "bg-red-100",
+    },
+    {
+      label: "CGPA",
+      value: student?.cgpa || "8.72",
+      icon: GraduationCap,
+      color: "text-blue-600",
+      bg: "bg-blue-100",
+    },
+    {
+      label: "Study Hours",
+      value: student?.studyHours || "18 hrs",
+      icon: Clock,
+      color: "text-purple-600",
+      bg: "bg-purple-100",
+    },
+  ];
 
-function QuickStats() {
   return (
-    <div className="mt-6 grid gap-6 md:grid-cols-3">
+    <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
       {stats.map((item) => {
         const Icon = item.icon;
 
         return (
           <div
             key={item.label}
-            className="rounded-[1.5rem] border border-[#E5E7EB] bg-white/85 p-5 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.08)] backdrop-blur"
+            className="rounded-3xl border border-gray-200 bg-white p-6 shadow-lg hover:shadow-xl transition"
           >
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-[#2563EB]/10 p-2 text-[#2563EB]">
-                <Icon size={20} />
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500">
+                  {item.label}
+                </p>
+
+                <h2 className={`mt-3 text-3xl font-bold ${item.color}`}>
+                  {item.value}
+                </h2>
               </div>
-              <p className="text-sm font-semibold text-[#111827]">{item.label}</p>
+
+              <div className={`rounded-2xl p-4 ${item.bg}`}>
+                <Icon className={item.color} size={26} />
+              </div>
             </div>
-            <p className="mt-4 text-2xl font-bold text-[#111827]">{item.value}</p>
           </div>
         );
       })}
