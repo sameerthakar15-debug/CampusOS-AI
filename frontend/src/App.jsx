@@ -1,3 +1,4 @@
+import AIAssistant from "./pages/AIAssistant";
 import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -9,6 +10,8 @@ function App() {
 
   return (
     <>
+      
+
       {page === "landing" && (
         <LandingPage onGetStarted={() => setPage("roles")} />
       )}
@@ -24,8 +27,15 @@ function App() {
         />
       )}
 
-      {page === "dashboard" && <Dashboard />}
+      {page === "dashboard" && (
+      <Dashboard onOpenAI={() => setPage("ai")} />
+      )}
+
+    {page === "ai" && (
+      <AIAssistant onBack={() => setPage("dashboard")} />
+    )}
     </>
+
   );
 }
 

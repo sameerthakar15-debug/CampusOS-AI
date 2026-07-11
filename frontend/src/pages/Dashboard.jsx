@@ -4,7 +4,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import Navbar from "../components/dashboard/Navbar";
 import QuickStats from "../components/dashboard/QuickStats";
 
-function Dashboard() {
+function Dashboard({ onOpenAI }) {
   return (
     <div className="min-h-screen bg-[linear-gradient(135deg,_#EAF2FF_0%,_#F7F9FF_60%,_#EDF7FF_100%)] p-4 lg:p-6">
       <div className="flex min-h-screen gap-6">
@@ -50,12 +50,15 @@ function Dashboard() {
                 study plan before lunch.”
               </div>
 
-              <button className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1d4ed8]">
-                Open Assistant
-                <ArrowRight size={16} />
-              </button>
+              <button
+            onClick={onOpenAI}
+              className="rounded-2xl bg-blue-600 px-6 py-3 text-white hover:bg-blue-700">
+              🤖 Open AI Assistant
+          </button>
             </Card>
           </div>
+
+          
 
           <QuickStats />
 
