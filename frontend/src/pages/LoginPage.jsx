@@ -29,14 +29,14 @@ function LoginPage({ onSelectRole }) {
             icon="👨‍🏫"
             title="Faculty"
             description="Coordinate classes, attendance, and campus insights."
-            onClick={() => alert("Coming Soon")}
+            onClick={() => onSelectRole("faculty")}
           />
 
           <RoleCard
             icon="🏢"
             title="Admin"
             description="Monitor operations and manage the campus ecosystem."
-            onClick={() => alert("Coming Soon")}
+            onClick={() => onSelectRole("admin")}
           />
         </div>
       </div>
