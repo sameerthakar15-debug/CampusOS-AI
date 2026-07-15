@@ -3,7 +3,7 @@ import { useState } from "react";
 import AdminSidebar from "../components/admin/AdminSidebar";
 import AdminNavbar from "../components/admin/AdminNavbar";
 import Students from "../components/admin/Students";
-
+import Faculty from "../components/admin/Faculty";
 
 import DashboardHome from "../components/admin/DashboardHome";
 
@@ -32,17 +32,7 @@ function AdminDashboard({ admin }) {
   return <Students />;
 
       case "faculty":
-        return (
-          <div className="rounded-3xl bg-white p-10 shadow-lg">
-            <h1 className="text-3xl font-bold">
-              👨‍🏫 Faculty Management
-            </h1>
-
-            <p className="mt-4 text-gray-500">
-              Faculty CRUD module coming next...
-            </p>
-          </div>
-        );
+        return <Faculty />
 
       case "departments":
         return (

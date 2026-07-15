@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from google import genai
 import os
+import firebase_admin
+from firebase_admin import credentials, auth, firestore
 
 # Load .env
 load_dotenv()
@@ -56,3 +58,18 @@ def home():
     return {
         "message": "CampusOS AI Backend Running 🚀"
     }
+# -----------------------------
+# Firebase Admin Initialization
+# -----------------------------
+
+cred = credentials.Certificate("serviceAccountKey.json")
+
+firebase_admin.initialize_app(cred)
+
+firestore_db = firestore.client()
+
+print("✅ Firebase Admin Connected")
+
+from routes.student import router as student_router
+
+app.include_router(student_router)
