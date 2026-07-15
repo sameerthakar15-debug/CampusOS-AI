@@ -1,0 +1,21 @@
+# Environment files
+backend/.env
+frontend/.env
+
+# Firebase secrets
+backend/serviceAccountKey.json
+
+# Python
+backend/venv/
+backend/__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
