@@ -16,7 +16,7 @@ function AIAssistant({ onBack }) {
   const [messages, setMessages] = useState([
     {
       sender: "ai",
-      text: "👋 Hi Mayur! I'm CampusOS AI. Ask me anything about coding, exams, projects, placements or college.",
+      text: "👋 Hi PCU! I'm CampusOS AI. Ask me anything about coding, exams, projects, placements or college.",
     },
   ]);
 

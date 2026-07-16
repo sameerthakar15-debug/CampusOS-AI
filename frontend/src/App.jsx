@@ -8,43 +8,41 @@ import FacultyLogin from "./pages/FacultyLogin";
 import AdminLogin from "./pages/AdminLogin";
 
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Attendance from "./pages/Attendance";
+import Assignments from "./pages/Assignments";
+import StudyPlanner from "./pages/StudyPlanner";
+import Placements from "./pages/Placements";
+
 import FacultyDashboard from "./pages/FacultyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-
 import AIAssistant from "./pages/AIAssistant";
 
-import Attendance from "./pages/faculty/Attendance";
-import Assignments from "./pages/faculty/Assignments";
-import Notices from "./pages/faculty/Notices";
-import Marks from "./pages/faculty/Marks";
-import Students from "./pages/faculty/Students";
-import Timetable from "./pages/faculty/Timetable";
-import Placements from "./pages/faculty/Placements";
-import Profile from "./pages/faculty/Profile";
-import Settings from "./pages/faculty/Settings";
+import FacultyAttendance from "./pages/faculty/Attendance";
+import FacultyAssignments from "./pages/faculty/Assignments";
+import FacultyNotices from "./pages/faculty/Notices";
+import FacultyMarks from "./pages/faculty/Marks";
+import FacultyStudents from "./pages/faculty/Students";
+import FacultyTimetable from "./pages/faculty/Timetable";
+import FacultyPlacements from "./pages/faculty/Placements";
+import FacultyProfile from "./pages/faculty/Profile";
+import FacultySettings from "./pages/faculty/Settings";
 
 function App() {
   const [page, setPage] = useState("landing");
-
   const [student, setStudent] = useState(null);
   const [faculty, setFaculty] = useState(null);
   const [admin, setAdmin] = useState(null);
 
   return (
     <>
-      {/* Landing Page */}
       {page === "landing" && (
         <LandingPage onGetStarted={() => setPage("roles")} />
       )}
 
-      {/* Role Selection */}
       {page === "roles" && (
         <LoginPage onSelectRole={(role) => setPage(role)} />
       )}
-
-      {/* ========================= */}
-      {/* STUDENT LOGIN */}
-      {/* ========================= */}
 
       {page === "student" && (
         <StudentLogin
@@ -56,9 +54,78 @@ function App() {
         />
       )}
 
-      {/* ========================= */}
-      {/* FACULTY LOGIN */}
-      {/* ========================= */}
+      {page === "dashboard" && (
+        <Dashboard
+          student={student}
+          onOpenAI={() => setPage("ai")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+        />
+      )}
+
+      {page === "profile" && (
+        <Profile
+          student={student}
+          onDashboard={() => setPage("dashboard")}
+          onOpenAI={() => setPage("ai")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+        />
+      )}
+
+      {page === "attendance" && (
+        <Attendance
+          onDashboard={() => setPage("dashboard")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+          onOpenAI={() => setPage("ai")}
+        />
+      )}
+
+      {page === "assignments" && (
+        <Assignments
+          onDashboard={() => setPage("dashboard")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+          onOpenAI={() => setPage("ai")}
+        />
+      )}
+
+      {page === "study-planner" && (
+        <StudyPlanner
+          onDashboard={() => setPage("dashboard")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+          onOpenAI={() => setPage("ai")}
+        />
+      )}
+
+      {page === "placements" && (
+        <Placements
+          onDashboard={() => setPage("dashboard")}
+          onOpenProfile={() => setPage("profile")}
+          onAttendance={() => setPage("attendance")}
+          onAssignments={() => setPage("assignments")}
+          onStudyPlanner={() => setPage("study-planner")}
+          onPlacements={() => setPage("placements")}
+          onOpenAI={() => setPage("ai")}
+        />
+      )}
 
       {page === "faculty" && (
         <FacultyLogin
@@ -70,9 +137,49 @@ function App() {
         />
       )}
 
-      {/* ========================= */}
-      {/* ADMIN LOGIN */}
-      {/* ========================= */}
+      {page === "faculty-dashboard" && (
+        <FacultyDashboard faculty={faculty} setPage={setPage} />
+      )}
+
+      {page === "faculty-attendance" && (
+        <FacultyAttendance onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-assignments" && (
+        <FacultyAssignments onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-notices" && (
+        <FacultyNotices onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-marks" && (
+        <FacultyMarks onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-students" && (
+        <FacultyStudents onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-timetable" && (
+        <FacultyTimetable onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-placements" && (
+        <FacultyPlacements onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-profile" && (
+        <FacultyProfile onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-settings" && (
+        <FacultySettings onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "ai" && (
+        <AIAssistant onBack={() => setPage("dashboard")} />
+      )}
 
       {page === "admin" && (
         <AdminLogin
@@ -84,106 +191,7 @@ function App() {
         />
       )}
 
-      {/* ========================= */}
-      {/* STUDENT DASHBOARD */}
-      {/* ========================= */}
-
-      {page === "dashboard" && (
-        <Dashboard
-          student={student}
-          onOpenAI={() => setPage("ai")}
-        />
-      )}
-
-      {/* ========================= */}
-      {/* FACULTY DASHBOARD */}
-      {/* ========================= */}
-
-      {page === "faculty-dashboard" && (
-        <FacultyDashboard
-          faculty={faculty}
-          setPage={setPage}
-        />
-      )}
-
-      {/* ========================= */}
-      {/* FACULTY PAGES */}
-      {/* ========================= */}
-
-      {page === "attendance" && (
-        <Attendance
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "assignments" && (
-        <Assignments
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "marks" && (
-        <Marks
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "students" && (
-  <Students
-    onBack={() => setPage("faculty-dashboard")}
-  />
-)}
-
-      {page === "notices" && (
-        <Notices
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "timetable" && (
-        <Timetable
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "placements" && (
-        <Placements
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {page === "profile" && (
-  <Profile
-    onBack={() => setPage("faculty-dashboard")}
-  />
-)}
-
-{page === "settings" && (
-  <Settings
-    onBack={() => setPage("faculty-dashboard")}
-  />
-)}
-
-
-      {/* ========================= */}
-      {/* AI ASSISTANT */}
-      {/* ========================= */}
-
-      {page === "ai" && (
-        <AIAssistant
-          onBack={() => setPage("faculty-dashboard")}
-        />
-      )}
-
-      {/* ========================= */}
-      {/* ADMIN DASHBOARD */}
-      {/* ========================= */}
-
-      {page === "admin-dashboard" && (
-        <AdminDashboard
-          admin={admin}
-        />
-      )}
+      {page === "admin-dashboard" && <AdminDashboard admin={admin} />}
     </>
   );
 }

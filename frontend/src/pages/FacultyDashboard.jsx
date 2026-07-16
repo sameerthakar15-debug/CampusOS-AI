@@ -162,7 +162,6 @@ if (loading) {
         <p className="text-sm text-blue-100">
           Logged in as
         </p>
-
         <h2 className="mt-2 text-xl font-semibold">
           {faculty?.email}
         </h2>
