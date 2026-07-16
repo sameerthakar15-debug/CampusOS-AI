@@ -18,12 +18,10 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  doc,
   query,
   where,
 } from "firebase/firestore";
 
-import { db } from "../firebase";
 
 // Firestore Collection
 const studentCollection = collection(db, "students");
