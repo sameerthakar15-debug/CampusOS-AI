@@ -13,20 +13,44 @@ function AIAssistant({ onBack }) {
   const [loading, setLoading] = useState(false);
 
   const [messages, setMessages] = useState([
-    {
-      sender: "ai",
-      text: "👋 Hi Mayur! I'm CampusOS AI. Ask me anything about coding, exams, projects, placements or college.",
-    },
-  ]);
+  {
+    sender: "ai",
+    text: `👋 Welcome Professor!
+
+I can help you with:
+
+• Generate Assignments
+• Create Quizzes
+• Generate Question Papers
+• Draft Notices
+• Explain Coding Problems
+• Placement Preparation
+• Student Guidance
+• Research Assistance
+
+Choose one of the Quick AI Tools below or ask me anything.`,
+  },
+]);
 
   // Clear Chat
   const clearChat = () => {
     setMessages([
-      {
-        sender: "ai",
-        text: "👋 Hi Mayur! I'm CampusOS AI. Ask me anything about coding, exams, projects, placements or college.",
-      },
-    ]);
+  {
+    sender: "ai",
+    text: `👋 Welcome Professor!
+
+I can help you with:
+
+• Generate Assignments
+• Create Quizzes
+• Generate Question Papers
+• Draft Notices
+• Explain Coding Problems
+• Placement Preparation
+• Student Guidance
+• Research Assistance`,
+  },
+]);
   };
 
   // Copy Message
@@ -127,6 +151,126 @@ function AIAssistant({ onBack }) {
       </header>
 
       {/* Chat */}
+
+      {/* Quick AI Tools */}
+
+<div className="max-w-5xl mx-auto px-6 pt-6">
+
+  <div className="mt-6 rounded-2xl bg-white p-6 shadow">
+
+  <h2 className="text-2xl font-bold">
+    AI Content Generator
+  </h2>
+
+  <p className="text-gray-500 mt-2">
+    Generate assignments, quizzes, notices and question papers instantly.
+  </p>
+
+  <div className="grid md:grid-cols-2 gap-5 mt-6">
+
+    <button
+      onClick={() =>
+        setMessage(
+          "Generate a Java assignment for Second Year AIML with 10 questions."
+        )
+      }
+      className="rounded-xl bg-blue-600 p-5 text-white hover:bg-blue-700"
+    >
+      📘 Generate Assignment
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage(
+          "Generate a DBMS quiz with answers."
+        )
+      }
+      className="rounded-xl bg-green-600 p-5 text-white hover:bg-green-700"
+    >
+      📝 Generate Quiz
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage(
+          "Generate Mid Semester Question Paper for Java Programming."
+        )
+      }
+      className="rounded-xl bg-purple-600 p-5 text-white hover:bg-purple-700"
+    >
+      📄 Question Paper
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage(
+          "Write a professional college notice."
+        )
+      }
+      className="rounded-xl bg-orange-500 p-5 text-white hover:bg-orange-600"
+    >
+      📢 Generate Notice
+    </button>
+
+  </div>
+
+</div>
+
+  <h2 className="text-xl font-bold mb-4">
+    Quick AI Tools
+  </h2>
+
+  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+
+    <button
+      onClick={() => {
+  setMessage("Generate Java assignment for Second Year AIML");
+  setTimeout(() => sendMessage(), 100);
+}}
+      className="rounded-xl bg-blue-100 p-4 hover:bg-blue-200"
+    >
+      Assignment
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("Generate DBMS Quiz with answers")
+      }
+      className="rounded-xl bg-green-100 p-4 hover:bg-green-200"
+    >
+      Quiz
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("Generate Mid Semester Question Paper")
+      }
+      className="rounded-xl bg-purple-100 p-4 hover:bg-purple-200"
+    >
+      Question Paper
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("Write a Notice for tomorrow's holiday")
+      }
+      className="rounded-xl bg-orange-100 p-4 hover:bg-orange-200"
+    >
+      Notice
+    </button>
+
+    <button
+      onClick={() =>
+        setMessage("Generate Attendance Summary")
+      }
+      className="rounded-xl bg-pink-100 p-4 hover:bg-pink-200"
+    >
+      Attendance
+    </button>
+
+  </div>
+
+</div>
 
       <div className="flex-1 overflow-y-auto">
 
