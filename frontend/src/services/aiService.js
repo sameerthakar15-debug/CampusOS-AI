@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/chat";
+const API_URL = `${import.meta.env.VITE_API_URL}/chat`;
 
 export async function askAI(message) {
   const user = JSON.parse(localStorage.getItem("user"));
