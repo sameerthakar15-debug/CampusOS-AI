@@ -64,14 +64,16 @@ function AIAssistant({ onBack }) {
         },
       ]);
     } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: "ai",
-          text: "❌ Unable to connect to AI server.",
-        },
-      ]);
-    }
+  console.error("AI Error:", error);
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      sender: "ai",
+      text: "❌ " + error.message,
+    },
+  ]);
+}
 
     setLoading(false);
   };
