@@ -1,4 +1,4 @@
-import { Bot, CalendarCheck, Sparkles } from "lucide-react";
+import { Bot, CalendarCheck, Mail, Sparkles } from "lucide-react";
 import Card from "../components/common/Card";
 import Sidebar from "../components/dashboard/Sidebar";
 import Navbar from "../components/dashboard/Navbar";
@@ -34,6 +34,8 @@ function Dashboard({
         student={student}
         onLogout={onLogout}
       />
+
+
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
 
@@ -110,13 +112,15 @@ function Dashboard({
                 🤖 Open AI Assistant
               </button>
 
+ 
+
             </Card>
 
           </div>
 
           <QuickStats />
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <div className="mt-6 grid gap-6 lg:grid-cols-4">
 
             <Card className="p-6">
 
@@ -164,6 +168,28 @@ function Dashboard({
               <h2 className="mt-4 text-2xl font-bold text-green-600">
                 Eligible
               </h2>
+
+            </Card>
+
+            <Card className="p-6">
+
+              <div className="flex items-center gap-3">
+                <Mail className="text-blue-600" />
+                <h3 className="font-semibold">
+                  Slashy AI
+                </h3>
+              </div>
+
+              <p className="mt-4 text-gray-600">
+                AI Email, Calendar & Productivity Automation
+              </p>
+
+              <button
+                onClick={onOpenAI}
+                className="mt-5 rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+              >
+                Open Assistant
+              </button>
 
             </Card>
 

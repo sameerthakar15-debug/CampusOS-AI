@@ -27,13 +27,16 @@ function StudentLogin({ onBack, onLogin }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+ const handleLogin = async () => {
   console.log("Login clicked");
 
   if (!email || !password) {
     setError("Please enter email and password");
     return;
   }
+
+  setLoading(true);
+  setError("");
 
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -42,22 +45,33 @@ function StudentLogin({ onBack, onLogin }) {
       password
     );
 
+    const user = userCredential.user;
+
     console.log("Logged In");
-    console.log(userCredential.user);
+    console.log(user);
+
+    // ✅ Save user in localStorage
+    localStorage.setItem("user", JSON.stringify({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+    }));
 
     alert("Login Successful!");
 
     if (onLogin) {
-      onLogin(userCredential.user);
+      onLogin(user);
     }
 
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     alert(error.code);
     setError(error.message);
+  } finally {
+    setLoading(false);
   }
 };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[linear-gradient(135deg,_#EAF2FF_0%,_#F7F9FF_60%,_#EDF7FF_100%)]">
 

@@ -9,7 +9,7 @@ from google import genai
 
 from services.memory_service import memory
 
-router = APIRouter(prefix="/ai")
+router = APIRouter()
 
 # -----------------------------
 # Gemini Client
@@ -30,8 +30,14 @@ class ChatRequest(BaseModel):
 # Memory Search Helper
 # -----------------------------
 def get_user_memories(user_id: str, query: str):
-    # MemoryClient (hosted Mem0) returns a plain list of memory dicts,
-    # e.g. [{"memory": "Name is Mayur", ...}, ...] — not {"results": [...]}
+    """
+    NOTE: memory_service.py uses Mem0's hosted MemoryClient, which returns
+    search() results as a plain list of memory dicts, e.g.:
+        [{"id": "...", "memory": "Name is Mayur", "user_id": "...", ...}, ...]
+    This is NOT the same shape as the OSS Memory().search() call, which
+    returns {"results": [...]}. Treating a list like a dict here was the
+    root cause of memories never being found.
+    """
     for attempt in range(3):
         try:
             memories = memory.search(
@@ -50,10 +56,10 @@ def get_user_memories(user_id: str, query: str):
 
 
 # -----------------------------
-# AI Chat Endpoint (mounted at /ai/chat)
+# Chat Endpoint
 # -----------------------------
 @router.post("/chat")
-def ai_chat(data: ChatRequest):
+def chat(data: ChatRequest):
 
     if client is None:
         return {
@@ -71,6 +77,7 @@ def ai_chat(data: ChatRequest):
         print(memories, flush=True)
         print("===================================\n", flush=True)
 
+        # memories is a list of dicts, e.g. [{"memory": "Name is Mayur", ...}, ...]
         for item in memories:
             if "memory" in item:
                 memory_context += f"- {item['memory']}\n"
