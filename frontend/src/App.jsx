@@ -27,6 +27,7 @@ import FacultyTimetable from "./pages/faculty/Timetable";
 import FacultyPlacements from "./pages/faculty/Placements";
 import FacultyProfile from "./pages/faculty/Profile";
 import FacultySettings from "./pages/faculty/Settings";
+import FacultyAIAssistant from "./pages/faculty/AIAssistant";
 
 function App() {
   const [page, setPage] = useState("landing");
@@ -142,7 +143,7 @@ function App() {
       )}
 
       {page === "faculty-attendance" && (
-        <FacultyAttendance onBack={() => setPage("faculty-dashboard")} />
+        <FacultyAttendance faculty={faculty} onBack={() => setPage("faculty-dashboard")} />
       )}
 
       {page === "faculty-assignments" && (
@@ -175,6 +176,10 @@ function App() {
 
       {page === "faculty-settings" && (
         <FacultySettings onBack={() => setPage("faculty-dashboard")} />
+      )}
+
+      {page === "faculty-ai" && (
+        <FacultyAIAssistant onBack={() => setPage("faculty-dashboard")} />
       )}
 
       {page === "ai" && (

@@ -1,218 +1,270 @@
-import { useState } from "react";
-import { saveAttendance } from "../../services/attendanceService";
+import { useEffect, useState } from "react";
+import { ClipboardCheck, Check, X } from "lucide-react";
 
+import { getStudents } from "../../services/rosterService";
+import { markAttendance } from "../../services/attendanceService";
 
-const initialStudents = [
-  { id: 1, name: "Rahul Patil", present: true },
-  { id: 2, name: "Sneha Sharma", present: true },
-  { id: 3, name: "Amit Singh", present: false },
-  { id: 4, name: "Priya Deshmukh", present: true },
-  { id: 5, name: "Rohan Joshi", present: false },
-];
+const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-function Attendance({ onBack }) {
- const [students, setStudents] = useState(initialStudents);
+function Attendance({ faculty, onBack }) {
+  const [department, setDepartment] = useState("AIML");
+  const [semester, setSemester] = useState(3);
+  const [division, setDivision] = useState("SY AIML A");
+  const [subject, setSubject] = useState("");
+  const [room, setRoom] = useState("");
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
 
-const [subject, setSubject] = useState("Java Programming");
+  const [students, setStudents] = useState([]);
+  const [statusMap, setStatusMap] = useState({});
+  const [loadingRoster, setLoadingRoster] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
 
-const [date, setDate] = useState(
-  new Date().toISOString().split("T")[0]
-);
+  const loadRoster = async () => {
+    setLoadingRoster(true);
+    setResult(null);
+    try {
+      const data = await getStudents({ department, semester, division });
+      const list = Array.isArray(data) ? data : [];
+      setStudents(list);
 
-  const toggleAttendance = (id) => {
-    setStudents(
-      students.map((student) =>
-        student.id === id
-          ? { ...student, present: !student.present }
-          : student
-      )
-    );
+      // default everyone to "present"
+      const defaults = {};
+      list.forEach((s) => {
+        defaults[s.email] = "present";
+      });
+      setStatusMap(defaults);
+    } catch (error) {
+      console.error("Failed to load roster:", error);
+      setStudents([]);
+    } finally {
+      setLoadingRoster(false);
+    }
   };
 
-  const handleSaveAttendance = async () => {
-  const attendanceData = {
-    facultyId: "faculty001",
-    subject,
-    date,
-    students,
-    createdAt: new Date().toISOString(),
+  useEffect(() => {
+    loadRoster();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const toggleStatus = (email) => {
+    setStatusMap((prev) => ({
+      ...prev,
+      [email]: prev[email] === "present" ? "absent" : "present",
+    }));
   };
 
-  const result = await saveAttendance(attendanceData);
+  const markAll = (status) => {
+    const updated = {};
+    students.forEach((s) => {
+      updated[s.email] = status;
+    });
+    setStatusMap(updated);
+  };
 
- if (result.success) {
-  console.log("Saved Document ID:", result.id);
-  alert("✅ Attendance Saved Successfully!");
-} else {
-  console.error("Firestore Error:", result.error);
-  alert("❌ Failed to Save Attendance");
-}
-};
+  const dayName = DAYS[new Date(date).getDay() === 0 ? 6 : new Date(date).getDay() - 1];
+
+  const handleSubmit = async () => {
+    if (!subject || !room || students.length === 0) {
+      setResult({ ok: false, message: "Fill in subject and room, and make sure a roster is loaded." });
+      return;
+    }
+
+    setSubmitting(true);
+    setResult(null);
+
+    const payload = {
+      date,
+      day: dayName,
+      subject,
+      department,
+      semester: Number(semester),
+      division,
+      facultyId: faculty?.uid || faculty?.email || "unknown",
+      facultyName: faculty?.name || "Unknown Faculty",
+      room,
+      records: students.map((s) => ({
+        studentId: s.email,
+        name: s.name,
+        rollNo: s.rollNo,
+        status: statusMap[s.email] || "present",
+      })),
+    };
+
+    try {
+      const res = await markAttendance(payload);
+      if (res.success) {
+        setResult({ ok: true, message: `Saved! Session attendance: ${res.percentage}%` });
+      } else {
+        setResult({ ok: false, message: "Could not save attendance." });
+      }
+    } catch (error) {
+      console.error("Failed to save attendance:", error);
+      setResult({ ok: false, message: "Could not reach the server. Is the backend running?" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-
       <button
         onClick={onBack}
-        className="mb-6 rounded-lg bg-blue-600 px-5 py-2 text-white"
+        className="mb-6 rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
       >
         ← Back
       </button>
 
-      <div className="rounded-2xl bg-white p-8 shadow-lg">
+      <div className="rounded-3xl bg-white p-8 shadow-xl">
+        <div className="flex items-center gap-3">
+          <ClipboardCheck size={32} className="text-blue-600" />
+          <div>
+            <h1 className="text-3xl font-bold">Mark Attendance</h1>
+            <p className="mt-1 text-gray-500">
+              Select the class, take attendance, and submit.
+            </p>
+          </div>
+        </div>
 
-        <h1 className="text-3xl font-bold">
-          Attendance Management
-        </h1>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="rounded-xl border p-3"
+          />
 
-        <p className="mt-2 text-gray-500">
-          Mark today's attendance.
-        </p>
+          <input
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            placeholder="Subject"
+            className="rounded-xl border p-3"
+          />
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            value={room}
+            onChange={(e) => setRoom(e.target.value)}
+            placeholder="Room / Lab"
+            className="rounded-xl border p-3"
+          />
 
-  <div>
+          <input
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            placeholder="Department"
+            className="rounded-xl border p-3"
+          />
 
-    <label className="block font-semibold mb-2">
-      Subject
-    </label>
+          <input
+            type="number"
+            value={semester}
+            onChange={(e) => setSemester(e.target.value)}
+            placeholder="Semester"
+            className="rounded-xl border p-3"
+          />
 
-    <select
-      value={subject}
-      onChange={(e) => setSubject(e.target.value)}
-      className="w-full rounded-lg border p-3"
-    >
-      <option>Java Programming</option>
-      <option>DBMS</option>
-      <option>Operating System</option>
-      <option>Artificial Intelligence</option>
-      <option>Computer Networks</option>
-    </select>
+          <input
+            value={division}
+            onChange={(e) => setDivision(e.target.value)}
+            placeholder="Division (e.g. SY AIML A)"
+            className="rounded-xl border p-3"
+          />
+        </div>
 
-  </div>
+        <button
+          onClick={loadRoster}
+          className="mt-5 rounded-xl bg-gray-800 px-6 py-3 text-white hover:bg-gray-900"
+        >
+          Load Roster
+        </button>
 
-  <div>
+        {result && (
+          <div
+            className={`mt-5 rounded-xl p-4 font-medium ${
+              result.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+            }`}
+          >
+            {result.message}
+          </div>
+        )}
 
-    <label className="block font-semibold mb-2">
-      Date
-    </label>
-
-    <input
-      type="date"
-      value={date}
-      onChange={(e) => setDate(e.target.value)}
-      className="w-full rounded-lg border p-3"
-    />
-
-  </div>
-
-</div>
-
-        <table className="mt-8 w-full">
-
-          <thead>
-
-            <tr className="border-b">
-
-              <th className="py-3 text-left">
-                Student Name
-              </th>
-
-              <th className="py-3 text-center">
-                Status
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {students.map((student) => (
-
-              <tr
-                key={student.id}
-                className="border-b"
-              >
-
-                <td className="py-4">
-                  {student.name}
-                </td>
-
-                <td className="text-center">
-
+        <div className="mt-8">
+          {loadingRoster ? (
+            <p className="text-gray-500">Loading roster...</p>
+          ) : students.length === 0 ? (
+            <p className="text-gray-500">
+              No students found for this department/semester/division. Check the
+              values above and click "Load Roster".
+            </p>
+          ) : (
+            <>
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-gray-600">{students.length} students</p>
+                <div className="flex gap-2">
                   <button
-                    onClick={() =>
-                      toggleAttendance(student.id)
-                    }
-                    className={`rounded-lg px-5 py-2 text-white ${
-                      student.present
-                        ? "bg-green-600"
-                        : "bg-red-600"
-                    }`}
+                    onClick={() => markAll("present")}
+                    className="rounded-lg bg-green-100 px-4 py-2 text-sm font-medium text-green-700 hover:bg-green-200"
                   >
-                    {student.present
-                      ? "Present"
-                      : "Absent"}
+                    Mark All Present
                   </button>
+                  <button
+                    onClick={() => markAll("absent")}
+                    className="rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-200"
+                  >
+                    Mark All Absent
+                  </button>
+                </div>
+              </div>
 
-                </td>
+              <div className="space-y-2">
+                {students.map((s) => {
+                  const status = statusMap[s.email] || "present";
+                  return (
+                    <div
+                      key={s.email}
+                      className="flex items-center justify-between rounded-xl border p-4"
+                    >
+                      <div>
+                        <p className="font-semibold">{s.name}</p>
+                        <p className="text-sm text-gray-500">
+                          Roll No: {s.rollNo} • {s.email}
+                        </p>
+                      </div>
 
-              </tr>
+                      <button
+                        onClick={() => toggleStatus(s.email)}
+                        className={`flex items-center gap-2 rounded-xl px-5 py-2 font-medium ${
+                          status === "present"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {status === "present" ? (
+                          <>
+                            <Check size={18} /> Present
+                          </>
+                        ) : (
+                          <>
+                            <X size={18} /> Absent
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
 
-            ))}
-
-          </tbody>
-
-        </table>
-
-{/* Attendance Summary */}
-
-<div className="mt-8 grid grid-cols-3 gap-6">
-
-  <div className="rounded-xl bg-blue-100 p-5 text-center">
-
-    <h2 className="text-3xl font-bold">
-      {students.length}
-    </h2>
-
-    <p>Total Students</p>
-
-  </div>
-
-  <div className="rounded-xl bg-green-100 p-5 text-center">
-
-    <h2 className="text-3xl font-bold">
-      {students.filter((s) => s.present).length}
-    </h2>
-
-    <p>Present</p>
-
-  </div>
-
-  <div className="rounded-xl bg-red-100 p-5 text-center">
-
-    <h2 className="text-3xl font-bold">
-      {students.filter((s) => !s.present).length}
-    </h2>
-
-    <p>Absent</p>
-
-  </div>
-
-</div>
-
-<button
-  onClick={handleSaveAttendance}
-  className="mt-8 rounded-xl bg-blue-600 px-8 py-3 text-white hover:bg-blue-700"
->
-  Save Attendance
-</button>
-
-        
-
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="mt-8 rounded-xl bg-blue-600 px-8 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                {submitting ? "Submitting..." : "Submit Attendance"}
+              </button>
+            </>
+          )}
+        </div>
       </div>
-
     </div>
   );
 }

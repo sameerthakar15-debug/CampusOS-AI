@@ -6,6 +6,8 @@ import Students from "../components/admin/Students";
 import Faculty from "../components/admin/Faculty";
 
 import DashboardHome from "../components/admin/DashboardHome";
+import Timetable from "../components/admin/Timetable";
+import Attendance from "../components/admin/Attendance";
 
 // Upcoming Pages
 // import Students from "../components/admin/Students";
@@ -52,14 +54,11 @@ function AdminDashboard({ admin }) {
           </div>
         );
 
+      case "timetable":
+        return <Timetable />;
+
       case "attendance":
-        return (
-          <div className="rounded-3xl bg-white p-10 shadow-lg">
-            <h1 className="text-3xl font-bold">
-              ✅ Attendance
-            </h1>
-          </div>
-        );
+        return <Attendance />;
 
       case "assignments":
         return (
