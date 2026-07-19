@@ -21,52 +21,52 @@ const menu = [
   {
     name: "Students",
     icon: Users,
-    page: "students",
+    page: "faculty-students",
   },
   {
     name: "Attendance",
     icon: ClipboardCheck,
-    page: "attendance",
+    page: "faculty-attendance",
   },
   {
     name: "Assignments",
     icon: BookOpen,
-    page: "assignments",
+    page: "faculty-assignments",
   },
   {
     name: "Marks",
     icon: GraduationCap,
-    page: "marks",
+    page: "faculty-marks",
   },
   {
     name: "Timetable",
     icon: CalendarDays,
-    page: "timetable",
+    page: "faculty-timetable",
   },
   {
     name: "Notices",
     icon: Bell,
-    page: "notices",
+    page: "faculty-notices",
   },
   {
     name: "Placements",
     icon: GraduationCap,
-    page: "placements",
+    page: "faculty-placements",
   },
   {
     name: "AI Assistant",
     icon: Bot,
-    page: "ai",
+    page: "faculty-ai",
   },
   {
     name: "Profile",
     icon: User,
-    page: "profile",
+    page: "faculty-profile",
   },
   {
     name: "Settings",
     icon: Settings,
-    page: "settings",
+    page: "faculty-settings",
   },
 ];
 

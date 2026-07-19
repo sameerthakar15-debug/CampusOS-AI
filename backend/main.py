@@ -16,7 +16,8 @@ from services.memory_service import memory
 
 from routes.student import router as student_router
 from routes.faculty import router as faculty_router
-
+from routes.timetable import router as timetable_router
+from routes.attendance import router as attendance_router
 
 # -----------------------------
 # Load Environment Variables
@@ -60,7 +61,8 @@ app.add_middleware(
 
 app.include_router(student_router)
 app.include_router(faculty_router)
-
+app.include_router(timetable_router)
+app.include_router(attendance_router)
 
 # -----------------------------
 # Request Model

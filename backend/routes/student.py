@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from typing import Optional
 
 from firebase.firebase_config import db, firebase_auth
 from models.student import StudentCreate
@@ -26,6 +27,7 @@ def create_student(student: StudentCreate):
             "rollNo": student.rollNo,
             "department": student.department,
             "semester": student.semester,
+            "division": student.division,
             "phone": student.phone,
             "cgpa": student.cgpa,
             "attendance": student.attendance,
@@ -43,3 +45,26 @@ def create_student(student: StudentCreate):
             status_code=400,
             detail=str(e)
         )
+
+
+@router.get("/list")
+def list_students(
+    department: Optional[str] = None,
+    semester: Optional[int] = None,
+    division: Optional[str] = None,
+):
+    """
+    Roster lookup — used by the faculty attendance-marking screen to
+    pull the list of students for a given class.
+    """
+    query = db.collection("students")
+
+    if department:
+        query = query.where("department", "==", department)
+    if semester is not None:
+        query = query.where("semester", "==", semester)
+    if division:
+        query = query.where("division", "==", division)
+
+    docs = query.stream()
+    return [{"id": doc.id, **doc.to_dict()} for doc in docs]

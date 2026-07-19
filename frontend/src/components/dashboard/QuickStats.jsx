@@ -5,35 +5,45 @@ import {
   Clock,
 } from "lucide-react";
 
-function QuickStats({ student }) {
+function QuickStats({ attendance, loadingAttendance }) {
+  const attendanceValue = loadingAttendance
+    ? "..."
+    : attendance?.totalCount
+    ? `${attendance.percentage}%`
+    : "No data yet";
+
   const stats = [
     {
       label: "Attendance",
-      value: `${student?.attendance || 92}%`,
+      value: attendanceValue,
       icon: Activity,
       color: "text-green-600",
       bg: "bg-green-100",
+      comingSoon: false,
     },
     {
       label: "Pending Assignments",
-      value: student?.assignments || "4",
+      value: "—",
       icon: BookOpen,
-      color: "text-red-600",
-      bg: "bg-red-100",
+      color: "text-gray-400",
+      bg: "bg-gray-100",
+      comingSoon: true,
     },
     {
       label: "CGPA",
-      value: student?.cgpa || "8.72",
+      value: "—",
       icon: GraduationCap,
-      color: "text-blue-600",
-      bg: "bg-blue-100",
+      color: "text-gray-400",
+      bg: "bg-gray-100",
+      comingSoon: true,
     },
     {
       label: "Study Hours",
-      value: student?.studyHours || "18 hrs",
+      value: "—",
       icon: Clock,
-      color: "text-purple-600",
-      bg: "bg-purple-100",
+      color: "text-gray-400",
+      bg: "bg-gray-100",
+      comingSoon: true,
     },
   ];
 
@@ -56,6 +66,12 @@ function QuickStats({ student }) {
                 <h2 className={`mt-3 text-3xl font-bold ${item.color}`}>
                   {item.value}
                 </h2>
+
+                {item.comingSoon && (
+                  <p className="mt-1 text-xs text-gray-400">
+                    Coming soon
+                  </p>
+                )}
               </div>
 
               <div className={`rounded-2xl p-4 ${item.bg}`}>

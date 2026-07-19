@@ -1,8 +1,11 @@
-import { Bot, CalendarCheck, Mail, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bot, CalendarCheck, Mail, Sparkles, CalendarDays } from "lucide-react";
 import Card from "../components/common/Card";
 import Sidebar from "../components/dashboard/Sidebar";
 import Navbar from "../components/dashboard/Navbar";
 import QuickStats from "../components/dashboard/QuickStats";
+import { getTimetable } from "../services/timetableService";
+import { getStudentAttendance } from "../services/attendanceService";
 
 function Dashboard({
   student,
@@ -14,6 +17,62 @@ function Dashboard({
   onStudyPlanner,
    onPlacements,
 }) {
+  const [lectures, setLectures] = useState([]);
+  const [loadingTimetable, setLoadingTimetable] = useState(true);
+
+  useEffect(() => {
+    const loadTimetable = async () => {
+      setLoadingTimetable(true);
+      try {
+        const filters = {};
+        if (student?.department) filters.department = student.department;
+        if (student?.semester) filters.semester = student.semester;
+
+        const data = await getTimetable(filters);
+        setLectures(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Failed to load timetable:", error);
+        setLectures([]);
+      } finally {
+        setLoadingTimetable(false);
+      }
+    };
+
+    loadTimetable();
+  }, [student?.department, student?.semester]);
+
+  const [attendance, setAttendance] = useState(null);
+  const [loadingAttendance, setLoadingAttendance] = useState(true);
+
+  useEffect(() => {
+    const loadAttendance = async () => {
+      if (!student?.email) {
+        setLoadingAttendance(false);
+        return;
+      }
+
+      setLoadingAttendance(true);
+      try {
+        const data = await getStudentAttendance(student.email);
+        setAttendance(data);
+      } catch (error) {
+        console.error("Failed to load attendance:", error);
+        setAttendance(null);
+      } finally {
+        setLoadingAttendance(false);
+      }
+    };
+
+    loadAttendance();
+  }, [student?.email]);
+
+  const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const sortedLectures = [...lectures].sort((a, b) => {
+    const dayDiff = dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
+    if (dayDiff !== 0) return dayDiff;
+    return a.startTime.localeCompare(b.startTime);
+  });
+
   return (
     <div className="min-h-screen bg-[linear-gradient(135deg,_#EAF2FF_0%,_#F7F9FF_60%,_#EDF7FF_100%)] p-4 lg:p-6">
   <div className="flex min-h-screen gap-6">
@@ -118,7 +177,56 @@ function Dashboard({
 
           </div>
 
-          <QuickStats />
+          <QuickStats
+            attendance={attendance}
+            loadingAttendance={loadingAttendance}
+          />
+
+          <Card className="mt-6 p-6">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="text-blue-600" />
+              <h3 className="font-semibold text-lg">
+                My Timetable
+              </h3>
+            </div>
+
+            {loadingTimetable ? (
+              <p className="mt-4 text-gray-500">Loading timetable...</p>
+            ) : sortedLectures.length === 0 ? (
+              <p className="mt-4 text-gray-500">
+                No lectures scheduled yet for your department.
+              </p>
+            ) : (
+              <div className="mt-4 overflow-x-auto">
+                <table className="min-w-full">
+                  <thead>
+                    <tr className="bg-blue-600 text-white">
+                      <th className="p-3 text-left">Day</th>
+                      <th className="p-3 text-left">Time</th>
+                      <th className="p-3 text-left">Subject</th>
+                      <th className="p-3 text-left">Division</th>
+                      <th className="p-3 text-left">Faculty</th>
+                      <th className="p-3 text-left">Room</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedLectures.map((lecture) => (
+                      <tr key={lecture.id} className="border-b hover:bg-gray-50">
+                        <td className="p-3">{lecture.day}</td>
+                        <td className="p-3">
+                          {lecture.startTime} – {lecture.endTime}
+                        </td>
+                        <td className="p-3 font-semibold">{lecture.subject}</td>
+                        <td className="p-3">{lecture.division}</td>
+                        <td className="p-3">{lecture.facultyName}</td>
+                        <td className="p-3">{lecture.room}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Card>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-4">
 
@@ -136,7 +244,11 @@ function Dashboard({
               </p>
 
               <h2 className="mt-2 text-4xl font-bold text-green-600">
-                92%
+                {loadingAttendance
+                  ? "..."
+                  : attendance?.totalCount
+                  ? `${attendance.percentage}%`
+                  : "No data yet"}
               </h2>
 
             </Card>
@@ -150,9 +262,13 @@ function Dashboard({
                 </h3>
               </div>
 
-              <h2 className="mt-4 text-4xl font-bold text-red-500">
-                4
+              <h2 className="mt-4 text-4xl font-bold text-gray-400">
+                —
               </h2>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Coming soon
+              </p>
 
             </Card>
 
@@ -165,9 +281,13 @@ function Dashboard({
                 </h3>
               </div>
 
-              <h2 className="mt-4 text-2xl font-bold text-green-600">
-                Eligible
+              <h2 className="mt-4 text-2xl font-bold text-gray-400">
+                —
               </h2>
+
+              <p className="mt-1 text-xs text-gray-400">
+                Coming soon
+              </p>
 
             </Card>
 

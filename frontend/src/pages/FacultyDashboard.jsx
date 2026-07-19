@@ -238,28 +238,28 @@ if (loading) {
               <div className="mt-6 grid grid-cols-2 gap-4">
 
                <button
-  onClick={() => setPage("attendance")}
+  onClick={() => setPage("faculty-attendance")}
   className="rounded-xl bg-blue-600 p-4 text-white hover:bg-blue-700"
 >
   Upload Attendance
 </button>
 
 <button
-  onClick={() => setPage("assignments")}
+  onClick={() => setPage("faculty-assignments")}
   className="rounded-xl bg-green-600 p-4 text-white hover:bg-green-700"
 >
   New Assignment
 </button>
 
 <button
-  onClick={() => setPage("notices")}
+  onClick={() => setPage("faculty-notices")}
   className="rounded-xl bg-purple-600 p-4 text-white hover:bg-purple-700"
 >
   Publish Notice
 </button>
 
 <button
-  onClick={() => setPage("marks")}
+  onClick={() => setPage("faculty-marks")}
   className="rounded-xl bg-orange-500 p-4 text-white hover:bg-orange-600"
 >
   Upload Marks
@@ -322,7 +322,7 @@ if (loading) {
 </div>
 
               <button
-  onClick={() => setPage("ai")}
+  onClick={() => setPage("faculty-ai")}
   className="mt-6 w-full rounded-xl bg-blue-600 py-3 text-white hover:bg-blue-700"
 >
   Open AI Assistant
